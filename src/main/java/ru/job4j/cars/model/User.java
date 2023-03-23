@@ -1,4 +1,4 @@
-package ru.job4j.job4j_cars.model;
+package ru.job4j.cars.model;
 
 import javax.persistence.*;
 import lombok.*;
