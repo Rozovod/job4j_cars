@@ -35,6 +35,21 @@ public class CrudRepository {
         run(command);
     }
 
+    public boolean booleanRun(Function<Session, Boolean> command) {
+        return tx(command);
+    }
+
+    public boolean booleanRun(String query, Map<String, Object> args) {
+        Function<Session, Boolean> command = session -> {
+            var sq = session.createQuery(query);
+            for (Map.Entry<String, Object> arg : args.entrySet()) {
+                sq.setParameter(arg.getKey(), arg.getValue());
+            }
+            return sq.executeUpdate() > 0;
+        };
+        return tx(command);
+    }
+
     public <T> Optional<T> optional(String query, Class<T> cl, Map<String, Object> args) {
         Function<Session, Optional<T>> command = session -> {
             var sq = session.createQuery(query, cl);
