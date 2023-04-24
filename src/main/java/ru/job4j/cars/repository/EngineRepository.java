@@ -13,8 +13,9 @@ import java.util.Optional;
 public class EngineRepository {
     private final CrudRepository crudRepository;
 
-    public void save(Engine engine) {
-        crudRepository.run(session -> session.persist(engine));
+    public Engine save(Engine engine) {
+        crudRepository.run(session -> session.save(engine));
+        return engine;
     }
 
     public boolean update(Engine engine) {

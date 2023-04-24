@@ -13,8 +13,9 @@ import java.util.Optional;
 public class OwnerRepository {
     private final CrudRepository crudRepository;
 
-    public void save(Owner owner) {
-        crudRepository.run(session -> session.persist(owner));
+    public Owner save(Owner owner) {
+        crudRepository.run(session -> session.save(owner));
+        return owner;
     }
 
     public boolean update(Owner owner) {
@@ -30,7 +31,7 @@ public class OwnerRepository {
 
     public Optional<Owner> findById(int id) {
         return crudRepository.optional(
-                "from Owner o JOIN FETCH o.user where o.id = :oId", Owner.class, Map.of("oId", id));
+                "from Owner where id = :oId", Owner.class, Map.of("oId", id));
     }
 
     public List<Owner> findAll() {

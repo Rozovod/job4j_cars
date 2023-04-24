@@ -13,8 +13,9 @@ import java.util.Optional;
 public class CarRepository {
     private final CrudRepository crudRepository;
 
-    public void save(Car car) {
-        crudRepository.run(session -> session.persist(car));
+    public Car save(Car car) {
+        crudRepository.run(session -> session.save(car));
+        return car;
     }
 
     public boolean update(Car car) {
@@ -30,8 +31,7 @@ public class CarRepository {
 
     public Optional<Car> findById(int id) {
         return crudRepository.optional(
-                "from Car c LEFT JOIN FETCH c.engine LEFT JOIN FETCH c.owner "
-                        + "LEFT JOIN FETCH c.owners where c.id = :cId", Car.class,
+                "from Car where id = :cId", Car.class,
                 Map.of("cId", id));
     }
 
