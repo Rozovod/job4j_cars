@@ -71,14 +71,15 @@ public class UserRepository {
     }
 
     /**
-     * Найти пользователя по login.
+     * Найти пользователя по login и password.
      * @param login login.
+     * @param password password.
      * @return Optional or user.
      */
-    public Optional<User> findByLogin(String login) {
+    public Optional<User> findByLoginAndPassword(String login, String password) {
         return crudRepository.optional(
-                "from User as u where u.login = :uLogin", User.class,
-                Map.of("uLogin", login)
+                "from User as u where u.login = :uLogin and u.password = :uPassword", User.class,
+                Map.of("uLogin", login, "uPassword", password)
         );
     }
 }
