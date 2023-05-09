@@ -3,25 +3,25 @@ package ru.job4j.cars.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "file")
+@Table(name = "category")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class File {
+public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
-    private String path;
 
-    public File(String name, String path) {
-        this.name = name;
-        this.path = path;
-    }
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "category_id")
+    private List<Body> bodies = new ArrayList<>();
 
     @Override
     public boolean equals(Object o) {
@@ -31,8 +31,8 @@ public class File {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        File file = (File) o;
-        return id == file.id;
+        Category category = (Category) o;
+        return id == category.id;
     }
 
     @Override
@@ -42,10 +42,9 @@ public class File {
 
     @Override
     public String toString() {
-        return "File{"
+        return "Category{"
                 + "id=" + id
                 + ", name='" + name + '\''
-                + ", path='" + path + '\''
                 + '}';
     }
 }

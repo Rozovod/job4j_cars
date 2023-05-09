@@ -15,6 +15,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    private String name;
     private String login;
     private String password;
 
@@ -36,10 +37,10 @@ public class User {
     }
 
     @Override
-    public String
-    toString() {
+    public String toString() {
         return "User{"
                 + "id=" + id
+                + ", name='" + name + '\''
                 + ", login='" + login + '\''
                 + ", password='" + password + '\''
                 + '}';

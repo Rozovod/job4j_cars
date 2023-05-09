@@ -21,6 +21,15 @@ public class Post {
     private String description;
     private LocalDateTime created = LocalDateTime.now();
 
+    @OneToOne
+    @JoinColumn(name = "car_id")
+    private Car car;
+    private int productionYear;
+    private int mileage;
+    private boolean carNew;
+    private boolean carSold = false;
+    private int price;
+
     @ManyToOne
     @JoinColumn(name = "auto_user_id")
     private User user;
@@ -36,10 +45,6 @@ public class Post {
             inverseJoinColumns = { @JoinColumn(name = "auto_user_id")}
     )
     private List<User> participates = new ArrayList<>();
-
-    @OneToOne
-    @JoinColumn(name = "car_id")
-    private Car car;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "auto_post_id")
@@ -68,10 +73,15 @@ public class Post {
                 + "id=" + id
                 + ", description='" + description + '\''
                 + ", created=" + created
+                + ", car=" + car
+                + ", productionYear=" + productionYear
+                + ", mileage=" + mileage
+                + ", carNew=" + carNew
+                + ", carSold=" + carSold
+                + ", price=" + price
                 + ", user=" + user
                 + ", priceHistories=" + priceHistories
                 + ", participates=" + participates
-                + ", car=" + car
                 + ", files=" + files
                 + '}';
     }

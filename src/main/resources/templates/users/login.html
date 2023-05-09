@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AutoStore</title>
+
+    <!-- Подключение стилей Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
+          crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+            integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"
+            integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V"
+            crossorigin="anonymous"></script>
+
+    <style>
+        .dropdown-menu {
+            background-color: #FF7F50;
+        }
+
+        .navbar {
+            padding: 2px 20px;
+        }
+
+        .navbar-brand img {
+            max-height: 50px;
+        }
+    </style>
+
+</head>
+<body>
+
+<!-- Основной контейнер с содержимым страницы -->
+<div class="container-fluid p-0">
+
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #FF7F50;">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="https://i121.fastpic.org/big/2023/0429/d0/a93b7f492993be7807533a2aa902cbd0.png" alt="AutoStore"></a>
+            <a class="nav-link" aria-current="page" th:href="@{/posts/}">AutoStore</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav me-auto">
+
+                    <!-- Выпадающий список категорий -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="categoryDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Категории
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="categoryDropdown">
+                            <form action="/category" method="post">
+                                <th:block th:each="category : ${categories}">
+                                    <li><button type="submit" class="dropdown-item" name="category" th:value="${category.id}" th:text="${category.name}"></button></li>
+                                </th:block>
+                            </form>
+                        </ul>
+                    </li>
+
+                    <!-- Фильтр по состоянию -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="stateDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Состояние
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="stateDropdown">
+                            <form action="/posts/state" method="post">
+                                <button type="submit" class="dropdown-item" name="state" value="true">Новые</button>
+                                <button type="submit" class="dropdown-item" name="state" value="false">С пробегом</button>
+                            </form>
+                        </ul>
+                    </li>
+
+                    <!-- Выпадающий список других фильтров -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="filtersDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Фильтры объявлений
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="filtersDropdown">
+                            <form action="/posts/filter" method="post">
+                                <button type="submit" class="dropdown-item" name="filter" value="lastDay">За последний день</button>
+                                <button type="submit" class="dropdown-item" name="filter" value="withPhoto">С фото</button>
+                                <button type="submit" class="dropdown-item" name="filter" value="isSold">Только актуальные</button>
+                            </form>
+                        </div>
+                    </li>
+                </ul>
+                <div class="navbar-nav" th:if="${user.name == 'Гость'}">
+                    <a class="nav-link me-3" th:href="@{/users/register}">Регистрация</a>
+                    <a class="nav-link" th:href="@{/users/login}">Войти</a>
+                </div>
+                <div class="navbar-nav" th:if="${user.name != 'Гость'}">
+                    <a class="nav-link me-3" href="#" th:text="${user.name}"></a>
+                    <a class="nav-link" th:href="@{/users/logout}">Выйти</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Форма входа -->
+    <div class="container">
+        <div class="row">
+            <div class="col-3"></div>
+            <div class="col-6">
+                <form class="mt-3" th:action="@{/users/login}" method="post">
+                    <div class="mb-3" th:if="${error}">
+                        <p class="text-danger" th:text="${error}"></p>
+                    </div>
+                    <div class="mb-3">
+                        <label for="login" class="form-label"><b>Логин</b></label>
+                        <input type="login" class="form-control" id="login" name="login" placeholder="login" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label"><b>Пароль</b></label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    <div class="mb-3 row">
+                        <div class="col-7">
+                            <p>Не зарегистрированы? <span><a th:href="@{/users/register}">Зарегистрироваться</a></span></p>
+                        </div>
+                        <div class="col-5">
+                            <div class="row">
+                                <div class="col-6"><a class="btn btn-danger w-100" th:href="@{/tasks/}">Отмена</a></div>
+                                <div class="col-6"><button class="btn btn-success w-100" type="submit">Войти</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-3"></div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -16,6 +16,7 @@ public class Owner {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
+    private String phone;
 
     @OneToOne
     @JoinColumn(name = "user_id")
@@ -43,6 +44,7 @@ public class Owner {
         return "Owner{"
                 + "id=" + id
                 + ", name='" + name + '\''
+                + ", phone='" + phone + '\''
                 + ", user=" + user
                 + '}';
     }

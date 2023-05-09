@@ -1,1 +1,0 @@
-ALTER TABLE auto_post ADD COLUMN IF NOT EXISTS car_id int not null unique REFERENCES car(id);

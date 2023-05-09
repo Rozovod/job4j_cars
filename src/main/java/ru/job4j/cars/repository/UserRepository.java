@@ -1,6 +1,8 @@
 package ru.job4j.cars.repository;
 
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import ru.job4j.cars.model.User;
 
@@ -12,31 +14,43 @@ import java.util.Optional;
 @AllArgsConstructor
 public class UserRepository {
     private final CrudRepository crudRepository;
+    private static final Logger LOG = LoggerFactory.getLogger(UserRepository.class);
 
     /**
      * Сохранить в базе.
      * @param user пользователь.
      * @return пользователь с id.
      */
-    public User create(User user) {
-        crudRepository.run(session -> session.save(user));
-        return user;
+    public Optional<User> create(User user) {
+        Optional<User> userOptional = Optional.empty();
+        try {
+            crudRepository.run(session -> session.save(user));
+            userOptional = Optional.of(user);
+        } catch (Exception e) {
+            LOG.error("Пользователь с таким логином уже существует", e);
+        }
+        return userOptional;
+
     }
 
     /**
      * Обновить в базе пользователя.
      * @param user пользователь.
      */
-    public void update(User user) {
-        crudRepository.run(session -> session.merge(user));
+    public boolean update(User user) {
+        return crudRepository.booleanRun(session -> {
+            session.merge(user);
+            return true;
+        });
     }
 
     /**
      * Удалить пользователя по id.
      * @param userId ID
      */
-    public void delete(int userId) {
-        crudRepository.run("DELETE User WHERE id = :uId", Map.of("uId", userId));
+    public boolean delete(int userId) {
+        return crudRepository.booleanRun(
+                "DELETE User WHERE id = :uId", Map.of("uId", userId));
     }
 
     /**

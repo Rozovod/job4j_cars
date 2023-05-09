@@ -2,6 +2,7 @@ package ru.job4j.cars.repository;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
+import ru.job4j.cars.model.Category;
 import ru.job4j.cars.model.Post;
 
 import java.time.LocalDateTime;
@@ -19,10 +20,25 @@ public class PostRepository {
         return post;
     }
 
+    public boolean update(Post post) {
+        return crudRepository.booleanRun(session -> {
+            session.merge(post);
+            return true;
+        });
+    }
+
+    public boolean delete(int id) {
+        return crudRepository.booleanRun("DELETE Post WHERE id = :pId", Map.of("pId", id));
+    }
+
     public Optional<Post> findById(int id) {
         return crudRepository.optional(
                 "from Post where id = :pId", Post.class,
                 Map.of("pId", id));
+    }
+
+    public List<Post> findAll() {
+        return crudRepository.query("from Post", Post.class);
     }
 
     public List<Post> findFromLastDay() {
@@ -40,7 +56,29 @@ public class PostRepository {
 
     public List<Post> findByCarBrand(String brand) {
         return crudRepository.query(
-                "SELECT p FROM Post p JOIN FETCH p.car WHERE p.car.name = :brand",
+                "SELECT p FROM Post p JOIN FETCH p.car с WHERE с.name = :brand",
                 Post.class, Map.of("brand", brand));
+    }
+
+    public List<Post> findByCategory(Category category) {
+        return crudRepository.query(
+                "SELECT p FROM Post p JOIN FETCH p.car с WHERE с.category = :category",
+                Post.class, Map.of("category", category)
+        );
+    }
+
+    public List<Post> findByState(boolean state) {
+        return crudRepository.query("from Post where carNew = :carNew", Post.class,
+                Map.of("carNew", state));
+    }
+
+    public List<Post> findBySold(boolean carSold) {
+        return crudRepository.query("from Post where carSold = :carSold", Post.class,
+                Map.of("carSold", carSold));
+    }
+
+    public boolean updateStates(int id) {
+        return crudRepository.booleanRun("UPDATE Post SET carSold = :carSold where id = :pId",
+                Map.of("carSold", true, "pId", id));
     }
 }

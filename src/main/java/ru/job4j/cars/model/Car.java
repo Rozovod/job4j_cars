@@ -18,13 +18,26 @@ public class Car {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
+    private String model;
+
+    @ManyToOne
+    @JoinColumn(name = "category_id", foreignKey = @ForeignKey(name = "CATEGORY_ID_FK"))
+    private Category category;
+
+    @ManyToOne
+    @JoinColumn(name = "body_id", foreignKey = @ForeignKey(name = "BODY_ID_FK"))
+    private Body body;
 
     @ManyToOne
     @JoinColumn(name = "engine_id", foreignKey = @ForeignKey(name = "ENGINE_ID_FK"))
     private Engine engine;
 
     @ManyToOne
-    @JoinColumn(name = "owner_id")
+    @JoinColumn(name = "transmission_id", foreignKey = @ForeignKey(name = "TRANSMISSION_ID_FK"))
+    private Transmission transmission;
+
+    @ManyToOne
+    @JoinColumn(name = "owner_id", foreignKey = @ForeignKey(name = "OWNER_ID_FK"))
     private Owner owner;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -56,7 +69,11 @@ public class Car {
         return "Car{"
                 + "id=" + id
                 + ", name='" + name + '\''
+                + ", model='" + model + '\''
+                + ", category=" + category
+                + ", body=" + body
                 + ", engine=" + engine
+                + ", transmission=" + transmission
                 + ", owner=" + owner
                 + ", owners=" + owners
                 + '}';
