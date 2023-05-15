@@ -20,7 +20,7 @@ public class Car {
     private String name;
     private String model;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", foreignKey = @ForeignKey(name = "CATEGORY_ID_FK"))
     private Category category;
 

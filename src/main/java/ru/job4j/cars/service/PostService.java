@@ -3,10 +3,10 @@ package ru.job4j.cars.service;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.job4j.cars.model.Category;
+import ru.job4j.cars.model.File;
 import ru.job4j.cars.model.Post;
 import ru.job4j.cars.repository.PostRepository;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,8 +15,13 @@ import java.util.Optional;
 public class PostService {
     private final PostRepository postRepository;
 
-    public Post save(Post post) throws IOException {
+    public Post saveWithFiles(Post post, List<File> savedFiles) {
+        post.setFiles(savedFiles);
         return postRepository.save(post);
+    }
+
+    public boolean delete(int id) {
+        return postRepository.delete(id);
     }
 
     public Optional<Post> findById(int id) {

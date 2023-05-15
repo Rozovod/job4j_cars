@@ -16,11 +16,13 @@ import java.util.List;
 @RequestMapping("/posts")
 public class PostController {
     private final PostService postService;
-    private final FileService fileService;
+    private CarService carService;
     private final CategoryService categoryService;
     private final BodyService bodyService;
     private final EngineService engineService;
     private final TransmissionService transmissionService;
+    private final OwnerService ownerService;
+    private final FileService fileService;
 
     @GetMapping({"/", "/index"})
     public String getAll(Model model) {
@@ -32,7 +34,7 @@ public class PostController {
     }
 
     @GetMapping("/category")
-    public String getCategory(@RequestParam(name = "id", required = false) Integer categoryId, Model model) {
+    public String getCategory(@RequestParam(name = "category", required = false) Integer categoryId, Model model) {
         if (categoryId != null) {
             var categoryOptional = categoryService.findById(categoryId);
             if (categoryOptional.isPresent()) {
@@ -100,21 +102,33 @@ public class PostController {
                          @RequestParam("bodyId") int bodyId,
                          @RequestParam("engineId") int engineId,
                          @RequestParam("transmissionId") int transmissionId,
-                         @RequestParam("files") List<MultipartFile> files, Model model) {
+                         @RequestParam("phone") String phone,
+                         @RequestParam("carName") String carName,
+                         @RequestParam("carModel") String carModel,
+                         @RequestPart("files") List<MultipartFile> files, Model model) {
         try {
+            Owner owner = ownerService.findByUser(user).orElseGet(() -> {
+                Owner newOwner = new Owner();
+                newOwner.setUser(user);
+                newOwner.setName(user.getName());
+                newOwner.setPhone(phone);
+                ownerService.save(newOwner);
+                return newOwner;
+            });
             Car car = new Car();
+            car.setName(carName);
+            car.setModel(carModel);
             car.setCategory(categoryService.findById(categoryId).get());
             car.setBody(bodyService.findById(bodyId).get());
             car.setEngine(engineService.findById(engineId).get());
             car.setTransmission(transmissionService.findById(transmissionId).get());
-            Owner owner = new Owner();
-            owner.setUser(user);
             car.setOwner(owner);
+            car.getOwners().add(owner);
+            carService.save(car);
             post.setCar(car);
             post.setUser(user);
-            List<File> fileList = fileService.convertToFiles(files);
-            post.setFiles(fileList);
-            postService.save(post);
+            List<File> savedFiles = fileService.convertMultipartInFile(files);
+            postService.saveWithFiles(post, savedFiles);
             model.addAttribute("message", "Ваше объявление добавлено успешно!");
             return "success/success";
         } catch (Exception e) {
@@ -123,11 +137,11 @@ public class PostController {
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/one/{id}")
     public String getById(Model model, @PathVariable int id) {
         var postOptional = postService.findById(id);
         if (postOptional.isEmpty()) {
-            model.addAttribute("message", "Задание не найдено");
+            model.addAttribute("message", "Ошибка. Объявление не найдено");
             return "errors/404";
         }
         model.addAttribute("post", postOptional.get());
@@ -135,13 +149,26 @@ public class PostController {
     }
 
     @GetMapping("/state/{id}")
-    public String updateState(Model model, @PathVariable int id) {
+    public String updateState(Model model, @PathVariable int id, @SessionAttribute User user) {
+        model.addAttribute("user", user);
         var isUpdatedState = postService.updateStates(id);
         if (!isUpdatedState) {
             model.addAttribute("message", "Ошибка. Статус объявления не обновлен");
             return "errors/404";
         }
         model.addAttribute("message", "Статус объявления изменен на Продано");
+        return "success/success";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String delete(Model model, @PathVariable int id, @SessionAttribute User user) {
+        model.addAttribute("user", user);
+        var isDeleted = postService.delete(id);
+        if (!isDeleted) {
+            model.addAttribute("message", "Ошибка. Объявление не удалено");
+            return "errors/404";
+        }
+        model.addAttribute("message", "Объявление удалено успешно");
         return "success/success";
     }
 }

@@ -38,13 +38,13 @@ public class PostRepository {
     }
 
     public List<Post> findAll() {
-        return crudRepository.query("from Post", Post.class);
+        return crudRepository.query("from Post p JOIN FETCH p.car JOIN FETCH p.files", Post.class);
     }
 
     public List<Post> findFromLastDay() {
         LocalDateTime yesterday = LocalDateTime.now().minusDays(1);
         return crudRepository.query(
-                "SELECT p FROM Post p WHERE p.created >= :yesterday",
+                "SELECT p FROM Post p JOIN FETCH p.files WHERE p.created >= :yesterday",
                 Post.class, Map.of("yesterday", yesterday));
     }
 
@@ -62,18 +62,18 @@ public class PostRepository {
 
     public List<Post> findByCategory(Category category) {
         return crudRepository.query(
-                "SELECT p FROM Post p JOIN FETCH p.car с WHERE с.category = :category",
+                "SELECT p FROM Post p JOIN FETCH p.files JOIN FETCH p.car car WHERE car.category = :category",
                 Post.class, Map.of("category", category)
         );
     }
 
     public List<Post> findByState(boolean state) {
-        return crudRepository.query("from Post where carNew = :carNew", Post.class,
+        return crudRepository.query("from Post p JOIN FETCH p.files where carNew = :carNew", Post.class,
                 Map.of("carNew", state));
     }
 
     public List<Post> findBySold(boolean carSold) {
-        return crudRepository.query("from Post where carSold = :carSold", Post.class,
+        return crudRepository.query("from Post p JOIN FETCH p.files where carSold = :carSold", Post.class,
                 Map.of("carSold", carSold));
     }
 

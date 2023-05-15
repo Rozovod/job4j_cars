@@ -74,13 +74,12 @@ public class FileService {
         return fileRepository.findAll();
     }
 
-    public List<File> convertToFiles(List<MultipartFile> files) throws IOException {
-        List<File> fileList = new ArrayList<>();
+    public List<File> convertMultipartInFile(List<MultipartFile> files) throws IOException {
+        List<File> savedFiles = new ArrayList<>();
         for (MultipartFile file : files) {
-            FileDto fileDto = new FileDto(file.getOriginalFilename(), file.getBytes());
-            File savedFile = save(fileDto);
-            fileList.add(savedFile);
+            File savedFile = save(new FileDto(file.getOriginalFilename(), file.getBytes()));
+            savedFiles.add(savedFile);
         }
-        return fileList;
+        return savedFiles;
     }
 }

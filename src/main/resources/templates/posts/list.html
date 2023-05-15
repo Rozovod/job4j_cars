@@ -53,7 +53,7 @@
                             Категории
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="categoryDropdown">
-                            <form action="/posts/category" method="post">
+                            <form action="/posts/category" method="get">
                                 <th:block th:each="category : ${categories}">
                                     <li><button type="submit" class="dropdown-item" name="category" th:value="${category.id}" th:text="${category.name}"></button></li>
                                 </th:block>
@@ -67,7 +67,7 @@
                             Состояние
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="stateDropdown">
-                            <form action="/posts/state" method="post">
+                            <form action="/posts/state" method="get">
                                 <button type="submit" class="dropdown-item" name="state" value="true">Новые</button>
                                 <button type="submit" class="dropdown-item" name="state" value="false">С пробегом</button>
                             </form>
@@ -80,7 +80,7 @@
                             Фильтры объявлений
                         </a>
                         <div class="dropdown-menu" aria-labelledby="filtersDropdown">
-                            <form action="/posts/filter" method="post">
+                            <form action="/posts/filter" method="get">
                                 <button type="submit" class="dropdown-item" name="filter" value="lastDay">За последний день</button>
                                 <button type="submit" class="dropdown-item" name="filter" value="withPhoto">С фото</button>
                                 <button type="submit" class="dropdown-item" name="filter" value="isSold">Только актуальные</button>
@@ -139,9 +139,9 @@
             <td>
                 <img th:if="${not #lists.isEmpty(post.files)}"
                      th:src="@{/files/{fileId}(fileId=${post.files[0].getId()})}"
-                     class="rounded-circle w=100" alt="No image">
+                     style="max-width: 150px;" alt="No image">
             </td>
-            <td><a th:text="${post.car.name}" th:href="@{/posts/{postId}(postId=${post.id})}"></a></td>
+            <td><a th:text="${post.car.name}" th:href="@{/posts/one/{postId}(postId=${post.id})}"></a></td>
             <td th:text="${post.car.model}"/>
             <td th:text="${post.productionYear}"/>
             <td th:text="${post.isCarNew} == true ? 'Новый' : 'С пробегом'"/>
