@@ -32,7 +32,7 @@ public class UserController {
             return "errors/404";
         }
         model.addAttribute("message", "Вы успешно зарегестрировались!");
-        return "redirect:/success/success";
+        return "success/success";
     }
 
     @GetMapping("/login")

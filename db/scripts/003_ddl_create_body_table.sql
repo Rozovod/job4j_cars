@@ -1,4 +1,4 @@
-create table if not exists category
+create table if not exists body
 (
     id serial primary key,
     name varchar not null,
