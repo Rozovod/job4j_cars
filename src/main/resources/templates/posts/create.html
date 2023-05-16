@@ -18,7 +18,7 @@
 
     <style>
         .dropdown-menu {
-            background-color: #FF7F50;
+            background-color: #FFA07A;
         }
 
         .navbar {
@@ -36,7 +36,7 @@
 <!-- Основной контейнер с содержимым страницы -->
 <div class="container-fluid p-0">
 
-    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #FF7F50;">
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #FFA07A;">
         <div class="container-fluid">
             <a class="navbar-brand" href="/">
                 <img src="https://i121.fastpic.org/big/2023/0429/d0/a93b7f492993be7807533a2aa902cbd0.png" alt="AutoStore"></a>
@@ -104,72 +104,80 @@
     <div class="container">
         <form class="mt-3" th:action="@{/posts/create}" method="post" enctype="multipart/form-data">
             <input type="hidden" name="categoryId" th:value="${categoryId}" />
-            <div class="form-group">
-                <label for="bodyId"><b>Тип кузова</b></label>
-                <select class="form-control" id="bodyId" name="bodyId" required>
-                    <option value="">Выбрать тип кузова</option>
-                    <option th:each="body : ${bodies}" th:value="${body.id}" th:text="${body.name}"></option>
-                </select>
-            </div>
-            <div class="mb-3">
-                <label for="car-name" class="form-label" th:for="car-name"><b>Марка автомобиля</b></label>
-                <input type="text" class="form-control" id="car-name" name="carName" placeholder="Марка автомобиля" required>
-            </div>
-            <div class="mb-3">
-                <label for="car-model" class="form-label" th:for="car-model"><b>Модель автомобиля</b></label>
-                <input type="text" class="form-control" id="car-model" name="carModel" placeholder="Модель автомобиля" required>
-            </div>
-            <div class="form-group">
-                <label for="engine"><b>Двигатель</b></label>
-                <select class="form-control" id="engine" name="engineId" required>
-                    <option value="">Выбрать тип двигателя</option>
-                    <option th:each="engine : ${engines}" th:value="${engine.id}" th:text="${engine.name}"></option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="transmission"><b>Коробка передач</b></label>
-                <select class="form-control" id="transmission" name="transmissionId" required>
-                    <option value="">Выбрать тип коробки передач</option>
-                    <option th:each="transmission : ${transmissions}" th:value="${transmission.id}" th:text="${transmission.name}"></option>
-                </select>
-            </div>
-            <div class="mb-3">
-                <label for="productionYear" class="form-label"><b>Год выпуска</b></label>
-                <input type="number" class="form-control" id="productionYear" name="productionYear" placeholder="Год выпуска" required>
-            </div>
-            <div class="mb-3">
-                <label for="carNew" class="form-label"><b>Состояние</b></label>
-                <select class="form-control" id="carNew" th:field="*{post.carNew}" required>
-                    <option value="true">Новый</option>
-                    <option value="false">С пробегом</option>
-                </select>
-            </div>
-            <div class="mb-3">
-                <label for="mileage" class="form-label"><b>Пробег, км</b></label>
-                <input type="number" class="form-control" id="mileage" name="mileage" placeholder="Пробег в км" required>
-            </div>
-            <div class="mb-3">
-                <label for="price" class="form-label"><b>Цена, руб</b></label>
-                <input type="number" class="form-control" id="price" name="price" placeholder="Цена" required>
-            </div>
-            <div class="mb-3">
-                <label for="phone" class="form-label"><b>Телефон для связи</b></label>
-                <input type="tel" class="form-control" id="phone" name="phone" autocomplete="tel" placeholder="+7 ххх хххххх" required>
-            </div>
-            <div class="mb-3">
-                <label for="description" class="form-label"><b>Описание</b></label>
-                <textarea class="form-control" id="description" name="description" rows="6" placeholder="Здесь можно написать об автомобиле подробнее" required></textarea>
-            </div>
-            <div class="mb-3">
-                <label for="formFile"><b>Добавить фото</b></label>
-                <input class="form-control form-control-sm w-100" type="file" id="formFile" name="files" multiple>
-            </div>
-            <div class="mb-3 row">
-                <div class="col-6"></div>
-                <div class="col-6">
-                    <div class="row">
-                        <div class="col-6"><a class="btn btn-secondary w-100" th:href="@{/posts/}">Отмена</a></div>
-                        <div class="col-6"><button class="btn btn-success w-100" type="submit">Создать объявление</button></div>
+            <div class="row">
+                <div class="col-12 col-md-4 mb-3">
+                    <label for="car-name" class="form-label" th:for="car-name"><b>Марка автомобиля</b></label>
+                    <input type="text" class="form-control" id="car-name" name="carName" placeholder="Марка автомобиля" required>
+                </div>
+                <div class="col-12 col-md-4 mb-3">
+                    <label for="car-model" class="form-label" th:for="car-model"><b>Модель автомобиля</b></label>
+                    <input type="text" class="form-control" id="car-model" name="carModel" placeholder="Модель автомобиля" required>
+                </div>
+                <div class="col-12 col-md-4 mb-3">
+                    <label for="productionYear" class="form-label" th:for="productionYear"><b>Год выпуска</b></label>
+                    <input type="number" class="form-control" id="productionYear" name="productionYear" placeholder="Год выпуска" required>
+                </div>
+                <div class="col-12 col-md-4 mb-3">
+                    <div class="form-group">
+                        <label for="bodyId" class="form-label"><b>Тип кузова</b></label>
+                        <select class="form-control" id="bodyId" name="bodyId" required>
+                            <option value="">Выбрать тип кузова</option>
+                            <option th:each="body : ${bodies}" th:value="${body.id}" th:text="${body.name}"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-12 col-md-4 mb-3">
+                    <div class="form-group">
+                        <label for="engine" class="form-label"><b>Двигатель</b></label>
+                        <select class="form-control" id="engine" name="engineId" required>
+                            <option value="">Выбрать тип двигателя</option>
+                            <option th:each="engine : ${engines}" th:value="${engine.id}" th:text="${engine.name}"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-12 col-md-4 mb-3">
+                    <div class="form-group">
+                        <label for="transmission" class="form-label"><b>Коробка передач</b></label>
+                        <select class="form-control" id="transmission" name="transmissionId" required>
+                            <option value="">Выбрать тип коробки передач</option>
+                            <option th:each="transmission : ${transmissions}" th:value="${transmission.id}" th:text="${transmission.name}"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-12 col-md-4 mb-3">
+                    <label for="carNew" class="form-label"><b>Состояние</b></label>
+                    <select class="form-control" id="carNew" th:field="*{post.carNew}" required>
+                        <option value="true">Новый</option>
+                        <option value="false">С пробегом</option>
+                    </select>
+                </div>
+                <div class="col-12 col-md-4 mb-3">
+                    <label for="mileage" class="form-label" th:for="mileage"><b>Пробег, км</b></label>
+                    <input type="number" class="form-control" id="mileage" name="mileage" placeholder="Пробег в км" required>
+                </div>
+                <div class="col-12 col-md-4 mb-3">
+                    <label for="price" class="form-label" th:for="price"><b>Цена, руб</b></label>
+                    <input type="number" class="form-control" id="price" name="price" placeholder="Цена" required>
+                </div>
+                <div class="col-12 col-md-4 mb-3">
+                    <label for="phone" class="form-label" th:for="phone"><b>Телефон для связи</b></label>
+                    <input type="tel" class="form-control" id="phone" name="phone" autocomplete="tel" placeholder="+7 ххх хххххх" required>
+                </div>
+                <div class="col-12 col-md-8 mb-3">
+                    <label for="description" class="form-label"><b>Описание</b></label>
+                    <textarea class="form-control" id="description" name="description" rows="6" placeholder="Здесь можно написать об автомобиле подробнее" required></textarea>
+                </div>
+                <div class="col-12 col-md-4 mb-3">
+                    <label for="formFile" class="form-label"><b>Добавить фото</b></label>
+                    <input class="form-control form-control-sm w-100" type="file" id="formFile" name="files" multiple>
+                </div>
+                <div class="mb-3 row">
+                    <div class="col-6"></div>
+                    <div class="col-6">
+                        <div class="row">
+                            <div class="col-6"><a class="btn btn-secondary" style="width: 90%;" th:href="@{/posts/}">Отмена</a></div>
+                            <div class="col-6"><button class="btn btn-success" style="width: 90%;" type="submit">Создать объявление</button></div>
+                        </div>
                     </div>
                 </div>
             </div>
