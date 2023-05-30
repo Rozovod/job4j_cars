@@ -10,10 +10,7 @@ import ru.job4j.cars.repository.FileRepository;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class FileService {
@@ -80,6 +77,7 @@ public class FileService {
             File savedFile = save(new FileDto(file.getOriginalFilename(), file.getBytes()));
             savedFiles.add(savedFile);
         }
+        savedFiles.sort(Comparator.comparing(File::getName));
         return savedFiles;
     }
 }

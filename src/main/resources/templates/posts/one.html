@@ -104,77 +104,84 @@
     <div class="container">
         <form class="mt-3">
             <input type="hidden" name="id" th:field="*{id}">
-            <div th:each="file : ${post.files}">
-                <img th:src="@{${file.path}}" class="card-img-top" style="max-width: 150px;" alt="No image">
-            </div>
-            <div class="mb-3">
-                <label for="car-name" class="form-label"><b>Марка автомобиля</b></label>
-                <span class="form-control" id="car-name" th:text="${post.car.name}"></span>
-            </div>
-            <div class="mb-3">
-                <label for="car-model" class="form-label"><b>Модель автомобиля</b></label>
-                <span class="form-control" id="car-model" th:text="${post.car.model}"></span>
-            </div>
-            <div class="mb-3">
-                <label for="body" class="form-label"><b>Тип кузова</b></label>
-                <span class="form-control" id="body" th:text="${post.car.body.name}"></span>
-            </div>
-            <div class="mb-3">
-                <label for="engine" class="form-label"><b>Двигатель</b></label>
-                <span class="form-control" id="engine" th:text="${post.car.engine.name}"></span>
-            </div>
-            <div class="mb-3">
-                <label for="transmission" class="form-label"><b>Коробка передач</b></label>
-                <span class="form-control" id="transmission" th:text="${post.car.transmission.name}"></span>
-            </div>
-            <div class="mb-3">
-                <label for="productionYear" class="form-label"><b>Год выпуска</b></label>
-                <span class="form-control" id="productionYear" th:text="${post.productionYear}"></span>
-            </div>
-            <div class="mb-3">
-                <label for="carNew" class="form-label"><b>Состояние</b></label>
-                <span class="form-control" id="carNew" th:text="${post.carNew} == true ? 'Новый' : 'С пробегом'"></span>
-            </div>
-            <div class="mb-3">
-                <label for="mileage" class="form-label"><b>Пробег, км</b></label>
-                <span class="form-control" id="mileage" th:text="${post.mileage}"></span>
-            </div>
-            <div class="mb-3">
-                <label for="price" class="form-label"><b>Цена, руб</b></label>
-                <span class="form-control" id="price" th:text="${post.mileage}"></span>
-            </div>
-            <div class="mb-3">
-                <label for="user-name" class="form-label"><b>Владелец</b></label>
-                <span class="form-control" id="user-name" th:text="${post.car.owner.user.name}"></span>
-            </div>
-            <div class="mb-3">
-                <label for="phone" class="form-label"><b>Телефон для связи</b></label>
-                <span class="form-control" id="phone" th:text="${post.car.owner.phone}"></span>
-            </div>
-            <div class="mb-3">
-                <label for="description" class="form-label"><b>Описание</b></label>
-                <textarea class="form-control" id="description" name="description" th:text="${post.description}" rows="6" disabled></textarea>
-            </div>
-            <!-- Показываем кнопки только если текущий пользователь создал этот пост -->
-            <div th:if="${post.user.id == session.user.id}">
-                <div class="mb-3 row d-flex">
-                    <div class="col-6"></div>
-                    <div class="col-6">
-                        <div class="row">
-                            <div class="col-6"><a class="btn btn-dark w-100" th:href="@{/posts/}">Все объявления</a></div>
-                            <div class="col-4"><a class="btn btn-success w-100" th:href="@{/posts/state/{id}(id=${post.id})}">Отметить как проданный</a></div>
-                            <div class="col-4"><a class="btn btn-danger w-100" th:href="@{/posts/delete/{id}(id=${post.id})}">Удалить объявление</a></div>
+            <div class="row">
+                <td>
+                    <div style="display:flex;">
+                        <div style="flex:1;padding-right:5px;" th:each="file : ${post.files}">
+                            <img th:if="${not #lists.isEmpty(post.files)}"
+                                 th:src="@{/files/{fileId}(fileId=${file.getId()})}"
+                                 style="max-width:100%; height:auto" alt="No image">
                         </div>
                     </div>
+                </td>
+                <div class="col-12 col-md-4 mb-3">
+                    <label for="car-name" class="form-label"><b>Марка автомобиля</b></label>
+                    <span class="form-control" id="car-name" th:text="${post.car.name}"></span>
                 </div>
-            </div>
+                <div class="col-12 col-md-4 mb-3">
+                    <label for="car-model" class="form-label"><b>Модель автомобиля</b></label>
+                    <span class="form-control" id="car-model" th:text="${post.car.model}"></span>
+                </div>
+                <div class="col-12 col-md-4 mb-3">
+                    <label for="productionYear" class="form-label"><b>Год выпуска</b></label>
+                    <span class="form-control" id="productionYear" th:text="${post.productionYear}"></span>
+                </div>
+                <div class="col-12 col-md-4 mb-3">
+                    <label for="body" class="form-label"><b>Тип кузова</b></label>
+                    <span class="form-control" id="body" th:text="${post.car.body.name}"></span>
+                </div>
+                <div class="col-12 col-md-4 mb-3">
+                    <label for="engine" class="form-label"><b>Двигатель</b></label>
+                    <span class="form-control" id="engine" th:text="${post.car.engine.name}"></span>
+                </div>
+                <div class="col-12 col-md-4 mb-3">
+                    <label for="transmission" class="form-label"><b>Коробка передач</b></label>
+                    <span class="form-control" id="transmission" th:text="${post.car.transmission.name}"></span>
+                </div>
+                <div class="col-12 col-md-4 mb-3">
+                    <label for="carNew" class="form-label"><b>Состояние</b></label>
+                    <span class="form-control" id="carNew" th:text="${post.carNew} == true ? 'Новый' : 'С пробегом'"></span>
+                </div>
+                <div class="col-12 col-md-4 mb-3">
+                    <label for="mileage" class="form-label"><b>Пробег, км</b></label>
+                    <span class="form-control" id="mileage" th:text="${post.mileage}"></span>
+                </div>
+                <div class="col-12 col-md-4 mb-3">
+                    <label for="price" class="form-label"><b>Цена, руб</b></label>
+                    <span class="form-control" id="price" th:text="${post.mileage}"></span>
+                </div>
+                <div class="col-12 col-md-4 mb-3">
+                    <label for="user-name" class="form-label"><b>Владелец</b></label>
+                    <span class="form-control" id="user-name" th:text="${post.car.owner.user.name}"></span>
+                </div>
+                <div class="col-12 col-md-4 mb-3">
+                    <label for="phone" class="form-label"><b>Телефон для связи</b></label>
+                    <span class="form-control" id="phone" th:text="${post.car.owner.phone}"></span>
+                </div>
+                <div class="row">
+                    <div class="col-md-8 mb-3">
+                        <label for="description" class="form-label"><b>Описание</b></label>
+                        <div class="description-wrapper">
+                            <textarea class="form-control" id="description" name="description" th:text="${post.description}" rows="6" disabled></textarea>
+                        </div>
+                    </div>
 
-            <!-- Показываем кнопку "Все объявления" всем пользователям, включая незарегистрированных -->
-            <div class="mb-3 row d-flex">
-                <div class="col-6"></div>
-                <div class="col-6">
-                    <div class="row">
-                        <div class="col-6"><a class="btn btn-dark w-100" th:href="@{/posts/}">Все объявления</a></div>
+                    <!-- Показываем кнопку "Все объявления" всем пользователям, включая незарегистрированных,
+                         а "Отметить как проданный" и "Удалить объявление" только создателю объявления-->
+                    <div class="col-md-4 mb-3" style="height: 150px;">
+                        <div class="row h-100">
+                            <div class="col-12 d-flex flex-column align-items-end">
+                                <div class="mb-3" th:if="${post.user.id == user.id}" style="height: 33%;">
+                                    <a class="btn btn-danger btn-lg h-100" style="width: 100%;" th:href="@{/posts/delete/{id}(id=${post.id})}">Удалить объявление</a>
+                                </div>
+                                <div class="mb-3" th:if="${post.user.id == user.id}" style="height: 33%;">
+                                    <a class="btn btn-success btn-lg h-100" style="width: 100%;" th:href="@{/posts/state/{id}(id=${post.id})}">Отметить как проданный</a>
+                                </div>
+                                <div class="mb-3" style="height: 33%;">
+                                    <a class="btn btn-dark btn-lg h-100" style="width: 100%;" th:href="@{/posts/}">Все объявления</a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.web.multipart.MultipartFile;
+import ru.job4j.cars.dto.PostDto;
 import ru.job4j.cars.model.*;
 import ru.job4j.cars.service.*;
 
@@ -35,6 +36,8 @@ public class PostController {
 
     @GetMapping("/category")
     public String getCategory(@RequestParam(name = "category", required = false) Integer categoryId, Model model) {
+        List<Category> categories = categoryService.findAll();
+        model.addAttribute("categories", categories);
         if (categoryId != null) {
             var categoryOptional = categoryService.findById(categoryId);
             if (categoryOptional.isPresent()) {
@@ -47,6 +50,8 @@ public class PostController {
 
     @GetMapping("/state")
     public String getPostsByState(@RequestParam(name = "state") boolean state, Model model) {
+        List<Category> categories = categoryService.findAll();
+        model.addAttribute("categories", categories);
         List<Post> posts = postService.findByState(state);
         model.addAttribute("posts", posts);
         return "posts/list";
@@ -54,6 +59,8 @@ public class PostController {
 
     @GetMapping("/filter")
     public String getByFilter(@RequestParam(name = "filter", required = false) String filter, Model model) {
+        List<Category> categories = categoryService.findAll();
+        model.addAttribute("categories", categories);
         switch (filter) {
             case "lastDay" -> model.addAttribute("posts", postService.findFromLastDay());
             case "withPhoto" -> model.addAttribute("posts", postService.findWithPhoto());
@@ -63,8 +70,10 @@ public class PostController {
         return "posts/list";
     }
 
-    @GetMapping
+    @GetMapping("/search")
     public String search(@RequestParam("query") String query, Model model) {
+        List<Category> categories = categoryService.findAll();
+        model.addAttribute("categories", categories);
         List<Post> posts = postService.findByCarBrand(query);
         model.addAttribute("posts", posts);
         return "posts/list";
@@ -97,35 +106,35 @@ public class PostController {
     }
 
     @PostMapping("/create")
-    public String create(@ModelAttribute Post post, @SessionAttribute User user,
+    public String create(@ModelAttribute PostDto postDto, @SessionAttribute User user,
                          @RequestParam("categoryId") int categoryId,
-                         @RequestParam("bodyId") int bodyId,
-                         @RequestParam("engineId") int engineId,
-                         @RequestParam("transmissionId") int transmissionId,
-                         @RequestParam("phone") String phone,
-                         @RequestParam("carName") String carName,
-                         @RequestParam("carModel") String carModel,
                          @RequestPart("files") List<MultipartFile> files, Model model) {
         try {
             Owner owner = ownerService.findByUser(user).orElseGet(() -> {
                 Owner newOwner = new Owner();
                 newOwner.setUser(user);
                 newOwner.setName(user.getName());
-                newOwner.setPhone(phone);
+                newOwner.setPhone(postDto.getPhone());
                 ownerService.save(newOwner);
                 return newOwner;
             });
             Car car = new Car();
-            car.setName(carName);
-            car.setModel(carModel);
+            car.setName(postDto.getCarName());
+            car.setModel(postDto.getCarModel());
             car.setCategory(categoryService.findById(categoryId).get());
-            car.setBody(bodyService.findById(bodyId).get());
-            car.setEngine(engineService.findById(engineId).get());
-            car.setTransmission(transmissionService.findById(transmissionId).get());
+            car.setBody(bodyService.findById(postDto.getBodyId()).get());
+            car.setEngine(engineService.findById(postDto.getEngineId()).get());
+            car.setTransmission(transmissionService.findById(postDto.getTransmissionId()).get());
             car.setOwner(owner);
             car.getOwners().add(owner);
             carService.save(car);
+            Post post = new Post();
+            post.setDescription(postDto.getDescription());
             post.setCar(car);
+            post.setProductionYear(postDto.getProductionYear());
+            post.setMileage(postDto.getMileage());
+            post.setCarNew(postDto.isCarNew());
+            post.setPrice(postDto.getPrice());
             post.setUser(user);
             List<File> savedFiles = fileService.convertMultipartInFile(files);
             postService.saveWithFiles(post, savedFiles);

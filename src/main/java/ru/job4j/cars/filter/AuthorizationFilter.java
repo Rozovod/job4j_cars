@@ -35,6 +35,7 @@ public class AuthorizationFilter extends HttpFilter {
         return uri.equals("/posts/") || uri.startsWith("/posts/category") || uri.startsWith("/posts/state")
                 || uri.startsWith("/posts/filter") || uri.startsWith("/posts/one")
                 || uri.startsWith("/users/") || uri.startsWith("/success/")
-                || uri.startsWith("/errors/") || uri.startsWith("/files/");
+                || uri.startsWith("/errors/") || uri.startsWith("/files/")
+                || uri.startsWith("/posts/search");
     }
 }

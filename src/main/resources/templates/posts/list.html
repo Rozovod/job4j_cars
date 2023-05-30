@@ -138,7 +138,7 @@
         <tr th:each="post : ${posts}">
             <td>
                 <img th:if="${not #lists.isEmpty(post.files)}"
-                     th:src="@{/files/{fileId}(fileId=${post.files[0].getId()})}"
+                     th:src="@{/files/{fileId}(fileId=${post.files[0].id})}"
                      style="max-width: 150px;" alt="No image">
             </td>
             <td><a th:text="${post.car.name}" th:href="@{/posts/one/{postId}(postId=${post.id})}"></a></td>
