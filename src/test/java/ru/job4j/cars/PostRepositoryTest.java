@@ -25,6 +25,9 @@ public class PostRepositoryTest {
     @Test
     public void whenSaveThenSame() {
         Post post = new Post();
+        File file = new File();
+        fileRepository.save(file);
+        post.setFiles(List.of(file));
         postRepository.save(post);
         var rsl = postRepository.findById(post.getId()).get();
         assertThat(rsl).isEqualTo(post);
@@ -34,6 +37,12 @@ public class PostRepositoryTest {
     public void whenFindFromLastDay() {
         Post postFirst = new Post();
         Post postSecond = new Post();
+        File firstFile = new File();
+        File secondFile = new File();
+        fileRepository.save(firstFile);
+        fileRepository.save(secondFile);
+        postFirst.setFiles(List.of(firstFile));
+        postSecond.setFiles(List.of(secondFile));
         postRepository.save(postFirst);
         postRepository.save(postSecond);
         var rsl = postRepository.findFromLastDay();
@@ -65,6 +74,12 @@ public class PostRepositoryTest {
         carRepository.save(carSecond);
         postFirst.setCar(carFirst);
         postSecond.setCar(carSecond);
+        File firstFile = new File();
+        File secondFile = new File();
+        fileRepository.save(firstFile);
+        fileRepository.save(secondFile);
+        postFirst.setFiles(List.of(firstFile));
+        postSecond.setFiles(List.of(secondFile));
         postRepository.save(postFirst);
         postRepository.save(postSecond);
         var rsl = postRepository.findByCarBrand("nameSecond");
